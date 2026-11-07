@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Play with Mia! — Chapter 15 · The Great Separation Challenge · Science Grade 5</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    /* chapter skin — set per chapter from its part colour (SPEC.md).
+       Chapter 1 = Part 1 DEEP TEAL (owner correction 2026-10-30: the
+       coral/red skin is OUT — "text must POP": white bold text on the
+       coloured bars/buttons, dark text only on white/very light tint).
+       --col/--deep/--tint drive the whole skin. */
+    --col:#E85D3D; --deep:#B23A1F; --tint:#FDEEE8;
+    --cream:#FFF7E0; --amber:#E8A020; --magenta:#B23A1F;
+    --sky:var(--tint); --ink:#1F2430; --teal:var(--col); --teal-dark:var(--deep);
+    --gold:var(--amber); --green:#3E9B4F; --green-dark:#2F7D3E;
+    --card-shadow:0 10px 24px rgba(178,58,31,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  [hidden]{display:none !important;}
+  html,body{height:100%;}
+  body{
+    font-family:"Comic Neue","Baloo 2","Comic Sans MS","Chalkboard SE","Segoe UI Rounded",ui-rounded,system-ui,sans-serif;
+    background:linear-gradient(180deg,#FDEEE8 0%,#FBE2DC 100%);
+    color:var(--ink); touch-action:manipulation; overflow-x:hidden;
+    display:flex; flex-direction:column; align-items:center; min-height:100dvh;
+  }
+  /* polka-dot strips, like the book's page borders */
+  body::before, body::after{
+    content:""; position:fixed; left:0; right:0; height:14px; z-index:5; pointer-events:none;
+    background-image:
+      radial-gradient(circle at 10px 7px, #E85D3D 4.5px, transparent 5px),
+      radial-gradient(circle at 34px 7px, #E8A020 4.5px, transparent 5px),
+      radial-gradient(circle at 58px 7px, #B23A1F 4.5px, transparent 5px);
+    background-size:72px 14px; background-repeat:repeat-x;
+  }
+  body::before{top:0;} body::after{bottom:0;}
+  /* ---------- soft meadow background ---------- */
+  .bg-hills,.bg-grass{position:fixed; left:-6%; width:112%; z-index:-2; pointer-events:none;}
+  .bg-hills{bottom:5vh; height:30vh; opacity:.5; animation:drift1 26s ease-in-out infinite alternate;}
+  .bg-grass{bottom:-4px; height:13vh; z-index:-1; opacity:.75; animation:drift2 19s ease-in-out infinite alternate;}
+  @keyframes drift1{from{transform:translateX(-10px)}to{transform:translateX(12px)}}
+  @keyframes drift2{from{transform:translateX(12px)}to{transform:translateX(-12px)}}
+  .petal{
+    position:fixed; top:-4vh; z-index:-1; pointer-events:none; border-radius:62% 38% 62% 38%;
+    opacity:.8; animation:petalfall linear infinite;
+  }
+  @keyframes petalfall{
+    0%{transform:translate(0,-4vh) rotate(0deg);}
+    100%{transform:translate(7vw,108vh) rotate(320deg);}
+  }
+  /* ---------- top bar ---------- */
+  .topbar{
+    width:100%; max-width:560px; display:flex; align-items:center; justify-content:space-between;
+    padding:16px 14px 4px; gap:8px;
+  }
+  .home-btn{
+    text-decoration:none; background:#fff; color:var(--deep); font-weight:800; font-size:15px;
+    border:3px solid #F2A694; border-radius:999px; padding:7px 14px; box-shadow:0 3px 0 #F2A694;
+  }
+  .home-btn:active{transform:translateY(2px); box-shadow:none;}
+  .unit-chip{
+    background:#E6F4F5; color:var(--deep); font-weight:800; font-size:14px;
+    border-radius:999px; padding:8px 12px; text-align:center; line-height:1.15;
+  }
+  .scorebox{
+    display:flex; align-items:center; gap:5px; background:#fff; border:3px solid #FFE1A1;
+    border-radius:999px; padding:6px 13px 6px 9px; font-size:17px; font-weight:800; color:#B97A0B;
+    box-shadow:0 3px 0 #FFE1A1; min-width:104px; justify-content:center;
+  }
+  .scorebox svg{width:24px;height:24px;flex:none;}
+  .scorebox.bump{animation:bump .45s ease;}
+  @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18) rotate(-3deg)}100%{transform:scale(1)}}
+  /* ---------- parent toggles ---------- */
+  .toggles{
+    width:100%; max-width:560px; display:flex; gap:8px; justify-content:flex-end; padding:6px 14px 0;
+  }
+  .tgl{
+    border:3px solid #F9D2C9; background:#fff; border-radius:999px; padding:5px 13px; cursor:pointer;
+    font-family:inherit; font-weight:800; font-size:13.5px; color:var(--ink); box-shadow:0 3px 0 #F9D2C9;
+    transition:transform .12s, box-shadow .12s, opacity .2s;
+  }
+  .tgl:active{transform:translateY(2px); box-shadow:none;}
+  .tgl.off{opacity:.5; filter:grayscale(.8);}
+  /* ---------- stage line ---------- */
+  .partline{
+    margin-top:8px; background:#fff; border:3px solid #F2A694; color:var(--deep);
+    font-weight:800; font-size:14.5px; border-radius:999px; padding:5px 16px; box-shadow:0 3px 0 #F2A694;
+  }
+  /* ---------- Mia ask-bar: sprite + speech bubble ---------- */
+  .dock{
+    position:relative; width:100%; max-width:560px; display:flex; align-items:flex-end; gap:4px;
+    padding:4px 14px 0; cursor:pointer;
+  }
+  .mascot{
+    width:80px; height:80px; flex:none; object-fit:cover; border-radius:50%;
+    border:4px solid var(--gold); background:#fff;
+    transform-origin:50% 100%; pointer-events:none;
+    animation:breathe 3.2s ease-in-out infinite;
+    filter:drop-shadow(0 6px 6px rgba(178,58,31,.22));
+  }
+  @keyframes breathe{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-3px) scale(1.015,.99)}}
+  .mascot.cheer{animation:cheer .62s ease 2;}
+  @keyframes cheer{
+    0%{transform:translateY(0)}35%{transform:translateY(-18px) rotate(-3deg) scale(1.05)}
+    70%{transform:translateY(0) rotate(2deg)}100%{transform:translateY(0)}
+  }
+  .mascot.encourage{animation:encourage .7s ease;}
+  @keyframes encourage{
+    0%{transform:rotate(0)}30%{transform:rotate(-5deg) translateY(-2px)}
+    65%{transform:rotate(4deg)}100%{transform:rotate(0)}
+  }
+  .bubble{
+    flex:1; position:relative; margin:0 0 12px 6px; background:#E6F4F5; border:3px solid #F2A694;
+    color:var(--deep); font-size:clamp(20px,5.8vw,26px); font-weight:800; text-align:center;
+    border-radius:22px; padding:10px 16px; line-height:1.25; box-shadow:0 4px 10px rgba(178,58,31,.12);
+  }
+  .bubble::before{
+    content:""; position:absolute; left:-13px; bottom:14px; width:20px; height:20px;
+    background:#E6F4F5; border-left:3px solid #F2A694; border-bottom:3px solid #F2A694;
+    transform:rotate(45deg); border-bottom-left-radius:6px;
+  }
+  .praise{
+    min-height:32px; text-align:center; font-size:clamp(19px,5.4vw,25px); font-weight:800; color:#095A62;
+    padding:2px 10px 0; opacity:0; transform:scale(.8); transition:all .25s;
+  }
+  .praise.show{opacity:1; transform:scale(1);}
+  /* ---------- INTRO: Mia says hello (no reading stage — this is not a
+     reading book; Mia TALKING is the introduction) ---------- */
+  #introView{width:100%; display:flex; flex-direction:column; align-items:center;}
+  .story-wrap{
+    width:100%; max-width:560px; display:flex; gap:10px; align-items:flex-start;
+    padding:8px 12px 0;
+  }
+  .story-mia{
+    width:92px; flex:none; border-radius:20px; border:4px solid #fff; background:#FFF7E0;
+    box-shadow:var(--card-shadow); display:block; transform-origin:50% 100%;
+  }
+  .story-card{
+    flex:1; min-width:0; background:#E6F4F5; border:4px solid var(--teal);
+    border-radius:26px; padding:16px 16px 14px; box-shadow:var(--card-shadow);
+  }
+  .story-title{
+    font-size:clamp(25px,6.8vw,33px); font-weight:800; color:var(--deep);
+    text-align:center; line-height:1.15; margin-bottom:10px;
+  }
+  .intro-text{
+    font-size:clamp(19px,5.4vw,23px); font-weight:700; text-align:center;
+    color:#1F2430; line-height:1.35;
+  }
+  .play-btn{
+    margin:14px auto 6px; background:var(--teal); color:#fff; border:none; cursor:pointer;
+    font-family:inherit; font-size:clamp(22px,6vw,27px); font-weight:800; border-radius:999px;
+    padding:16px 38px; box-shadow:0 7px 0 var(--teal-dark);
+    transition:transform .12s, box-shadow .12s, opacity .2s;
+    animation:playglow 1.6s ease-in-out infinite;
+  }
+  /* the invitation PULSE is a breathing glow, not a moving box — the button
+     itself never moves, so little fingers (and tap targets) stay steady */
+  @keyframes playglow{
+    0%,100%{box-shadow:0 7px 0 var(--teal-dark), 0 0 0 0 rgba(246,184,28,0);}
+    50%{box-shadow:0 7px 0 var(--teal-dark), 0 0 0 13px rgba(246,184,28,.38);}
+  }
+  .play-btn:active{transform:translateY(5px); box-shadow:0 2px 0 var(--teal-dark);}
+  .play-btn.listening{animation:none; opacity:.75;}
+  /* intro gate: while Mia is talking the button waits, dimmed and still;
+     when his line ends it lights up with the invitation pulse */
+  .play-btn.waiting{animation:none; opacity:.55; filter:saturate(.55);}
+  .play-btn.ready{animation:playglow 1.1s ease-in-out infinite; opacity:1;}
+  .play-btn:disabled{cursor:default;}
+  /* ---------- TICK OR CROSS ---------- */
+  .tick-card{
+    width:calc(100% - 24px); max-width:536px; margin:8px auto 4px; background:#fff;
+    border:4px solid var(--teal); border-radius:24px; padding:18px 14px 16px;
+    box-shadow:var(--card-shadow); text-align:center;
+  }
+  .tick-statement{
+    font-size:clamp(23px,6.4vw,29px); font-weight:800; color:var(--deep);
+    line-height:1.3; min-height:76px; display:flex; align-items:center; justify-content:center;
+  }
+  .tick-btns{display:flex; gap:12px; margin-top:12px;}
+  .tick-btn{
+    flex:1; border-radius:22px; padding:12px 6px 13px; cursor:pointer; font-family:inherit;
+    font-size:46px; font-weight:800; line-height:1; transition:transform .12s, box-shadow .12s;
+  }
+  .tick-btn span{display:block; font-size:16.5px; margin-top:7px; line-height:1.1;}
+  .tick-btn.yes{background:#E2F3D8; color:var(--green-dark); border:4px solid var(--green); box-shadow:0 6px 0 var(--green-dark);}
+  .tick-btn.no{background:#FFE8C4; color:#9A6206; border:4px solid #E8A020; box-shadow:0 6px 0 #B97A0B;}
+  .tick-btn:active{transform:translateY(4px); box-shadow:none;}
+  .tick-btn.right{animation:rightpop .5s ease;}
+  /* ---------- FILL IN THE BLANKS ---------- */
+  #fillView{width:100%; display:flex; flex-direction:column; align-items:center;}
+  .fill-card{
+    width:calc(100% - 24px); max-width:536px; margin:8px auto 4px; background:#FFF7E0;
+    border:4px solid #E8A020; border-radius:24px; padding:18px 14px 16px;
+    box-shadow:var(--card-shadow); text-align:center;
+  }
+  .fill-sentence{
+    font-size:clamp(20px,5.7vw,26px); font-weight:800; color:var(--deep);
+    line-height:1.5; min-height:84px;
+  }
+  .blank{
+    display:inline-block; min-width:74px; margin:0 4px; padding:0 8px; text-align:center;
+    color:var(--green-dark); border-bottom:5px dashed var(--gold); border-radius:6px;
+  }
+  .blank.filled{border-bottom:5px solid var(--green); background:#EAF7EE; animation:rightpop .5s ease;}
+  .fill-tiles{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:14px;}
+  .fill-tile{
+    font-family:inherit; font-size:21px; font-weight:800; color:var(--ink);
+    background:#FFFDF6; border:4px solid #F9D2C9; border-radius:999px; padding:11px 22px;
+    cursor:pointer; box-shadow:0 5px 0 #F9D2C9;
+    transition:transform .12s, box-shadow .12s, background .25s, border-color .25s;
+  }
+  .fill-tile:active{transform:translateY(3px); box-shadow:none;}
+  .fill-tile.right{background:#BDEBC4; border-color:var(--green); box-shadow:0 5px 0 var(--green-dark); animation:rightpop .5s ease;}
+  .fill-tile.wrong{animation:wobble .45s ease;}
+  /* ---------- STAGE 2: the New Words box ---------- */
+  #vocabView{width:100%; display:flex; flex-direction:column; align-items:center;}
+  .vocab-card{
+    width:calc(100% - 24px); max-width:536px; margin:8px auto 4px; background:#FFF7E0;
+    border:4px solid #E8A020; border-radius:24px; padding:14px 12px 16px;
+    box-shadow:var(--card-shadow);
+  }
+  .vocab-title{
+    font-size:clamp(21px,6vw,26px); font-weight:800; color:#B97A0B;
+    text-align:center; margin-bottom:10px;
+  }
+  .vocab-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .vocab-item{
+    position:relative; border:4px solid #F9D2C9; border-radius:20px; background:#FFFDF6;
+    padding:8px 6px 9px; cursor:pointer; font-family:inherit;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    transition:transform .13s, background .25s, border-color .25s;
+  }
+  .vocab-item img, .vocab-item svg{width:100%; height:70px; border-radius:13px; display:block; pointer-events:none;}
+  /* the WHOLE picture must fit inside its box — never cropped (owner rule) */
+  .vocab-item img{object-fit:contain; background:#FFF3D6;}
+  .vocab-item .vw{font-size:19px; font-weight:800; color:var(--deep); line-height:1;}
+  .vocab-item:active{transform:translateY(3px);}
+  .vocab-item.wrong{animation:wobble .45s ease;}
+  .vocab-item.right{
+    border-color:var(--green); background:#EAF7EE;
+    animation:rightpop .5s ease; box-shadow:0 0 18px rgba(62,155,79,.45);
+  }
+  .vocab-item .tick{
+    position:absolute; right:4px; top:4px; width:26px; height:26px; border-radius:50%;
+    background:var(--green); color:#fff; font-size:16px; font-weight:800; display:none;
+    align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,.25); z-index:2;
+  }
+  .vocab-item.right .tick{display:flex;}
+  /* ---------- STAGE 3: talking MCQs (option tiles) ---------- */
+  #quizView{width:100%; display:flex; flex-direction:column; align-items:center;}
+  .opts{
+    width:100%; max-width:560px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    padding:10px 14px 20px;
+  }
+  .opts.wide{grid-template-columns:1fr; max-width:536px;}
+  .opt{
+    border:4px solid #fff; border-radius:24px; padding:10px 6px 10px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    transition:transform .13s, box-shadow .13s, opacity .25s, background .25s;
+    font-family:inherit; min-height:118px; justify-content:center;
+  }
+  .opt img{width:100%; height:76px; object-fit:contain; background:#FFFDF6; border-radius:15px; display:block; pointer-events:none;}
+  .opt svg{width:100%; height:76px; border-radius:15px; display:block; pointer-events:none;}
+  .opt .bignum{font-size:54px; font-weight:800; color:var(--deep); line-height:1; padding:8px 0 2px;}
+  .opt span{font-size:20px; font-weight:800; color:var(--ink); line-height:1;}
+  .opt.sentence{min-height:0; padding:15px 16px;}
+  .opt.sentence span{font-size:19.5px; line-height:1.3; text-align:center;}
+  .opt[data-tint="a"]{background:#DDEEF0; box-shadow:0 7px 0 #7FB5BA, 0 11px 14px rgba(178,58,31,.16);}
+  .opt[data-tint="b"]{background:#FFF0C4; box-shadow:0 7px 0 #EFC078, 0 11px 14px rgba(160,110,40,.16);}
+  .opt[data-tint="c"]{background:#E2F3D8; box-shadow:0 7px 0 #A5D69B, 0 11px 14px rgba(90,140,80,.16);}
+  .opt:active{transform:translateY(5px);}
+  .opt.right{
+    background:#BDEBC4 !important; border-color:var(--green);
+    animation:rightpop .5s ease; box-shadow:0 7px 0 var(--green-dark), 0 0 22px rgba(62,155,79,.55) !important;
+  }
+  @keyframes rightpop{0%{transform:scale(1)}40%{transform:scale(1.1) rotate(-2deg)}100%{transform:scale(1)}}
+  .opt.wrong{animation:wobble .45s ease;}
+  @keyframes wobble{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}45%{transform:translateX(6px)}70%{transform:translateX(-4px)}90%{transform:translateX(2px)}}
+  /* ---------- star burst ---------- */
+  .burst-star{position:absolute; pointer-events:none; z-index:6; animation:burst .85s ease-out forwards;}
+  @keyframes burst{
+    0%{transform:translate(0,0) scale(.4) rotate(0deg); opacity:1;}
+    100%{transform:translate(var(--dx),var(--dy)) scale(1.15) rotate(160deg); opacity:0;}
+  }
+  /* ---------- STAGE 4a: Match It (the New Words) ---------- */
+  #matchView{width:100%; display:flex; flex-direction:column; align-items:center;}
+  .match-tiles{
+    width:100%; max-width:440px; display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
+    padding:8px 12px 4px;
+  }
+  .tile{
+    position:relative; border:4px dashed #F2A694; border-radius:20px; background:#FFFDF6;
+    min-height:92px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+    padding:6px 2px; overflow:hidden; transition:border-color .25s, background .25s, box-shadow .25s;
+  }
+  .tile .word{font-size:18px; font-weight:800; color:var(--deep); line-height:1.05; text-align:center;}
+  .tile .def{font-size:10px; font-weight:700; color:#4E6E73; line-height:1.15; text-align:center; padding:0 3px;}
+  .tile.hot{border-color:var(--gold); border-style:solid; background:#FFF3D6; transform:scale(1.05);}
+  .tile.wrong{animation:wobble .45s ease;}
+  .tile.matched{border:4px solid var(--green); background:#EAF7EE; box-shadow:0 0 16px rgba(62,155,79,.45);}
+  .tile .thumb{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#FFF3D6; opacity:0; transition:opacity .35s;
+  }
+  .tile .thumbwrap{position:absolute; inset:0; opacity:0; transition:opacity .35s;}
+  .tile .thumbwrap svg{width:100%; height:100%; display:block;}
+  .tile.matched .thumb, .tile.matched .thumbwrap{opacity:1;}
+  .tile .tick{
+    position:absolute; right:3px; bottom:3px; z-index:2; width:24px; height:24px; border-radius:50%;
+    background:var(--green); color:#fff; font-size:15px; font-weight:800; display:none;
+    align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,.25);
+  }
+  .tile.matched .tick{display:flex;}
+  .tray{
+    width:100%; max-width:560px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+    padding:12px 14px 20px; min-height:120px;
+  }
+  .drag-card{
+    position:relative; flex:0 0 44%; max-width:175px; aspect-ratio:1.12; border-radius:18px;
+    border:4px solid #F9D2C9; box-shadow:0 6px 14px rgba(178,58,31,.18); overflow:hidden;
+    cursor:grab; touch-action:none; background:#FFF7E0; will-change:transform; z-index:1;
+  }
+  .drag-card{display:flex; flex-direction:column;}
+  .drag-card img{flex:1; width:100%; min-height:0; object-fit:contain; display:block; -webkit-user-drag:none; pointer-events:none;}
+  .drag-card .dc-word{text-align:center; font-size:16px; font-weight:800; color:var(--deep); padding:3px 2px 5px; line-height:1; background:#FFF7E0;}
+  .drag-card svg{width:100%; height:100%; display:block; pointer-events:none;}
+  .drag-card.dragging{cursor:grabbing; z-index:9; box-shadow:0 16px 28px rgba(178,58,31,.3);}
+  .drag-card.spring{transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
+  .drag-card.selected{outline:5px solid var(--gold); outline-offset:2px;}
+  .drag-card.wrong{animation:wobble .45s ease;}
+  .drag-card.gone{transition:transform .45s ease, opacity .45s ease; transform:scale(.2) !important; opacity:0; pointer-events:none;}
+  /* ---------- Mia talking: mouth overlay, gestures, thumb pop ---------- */
+  .mascot-wrap{position:relative; width:80px; height:80px; flex:none;}
+  .dock .mascot{width:100%; height:100%;}
+  @media (max-height:660px){ .dock .mascot-wrap{width:64px; height:64px;} }
+  /* Mia's mouth (measured on mia-face.jpg: centre 54% / 70%) — hidden until
+     he speaks; while speaking it opens and closes in rhythm with the voice */
+  .mouth{
+    position:absolute; left:49%; top:66%; width:10%; height:8%;
+    background:#4A2C20; border-radius:50%; opacity:0; pointer-events:none;
+    transform:scaleY(.18); transform-origin:center; transition:opacity .15s;
+  }
+  .mouth::after{
+    content:""; position:absolute; left:20%; right:20%; bottom:6%; height:38%;
+    background:#E88CA0; border-radius:50%;
+  }
+  .mascot-wrap.speaking .mouth{opacity:1; animation:mouthTalk .32s ease-in-out infinite alternate;}
+  @keyframes mouthTalk{from{transform:scaleY(.18)} to{transform:scaleY(1)}}
+  .mascot-wrap[data-emotion="praise"] .mouth{width:13%; left:47.5%;}
+  .mascot-wrap[data-emotion="retry"] .mouth{animation-duration:.52s;}
+  .mascot-wrap[data-emotion="story"] .mouth{animation-duration:.42s;}
+  .mascot-wrap.speaking{filter:drop-shadow(0 0 9px rgba(245,166,35,.55));}
+  .mascot-wrap.pulse .mascot{animation:miapulse .26s ease;}
+  @keyframes miapulse{40%{transform:scale(1.07) translateY(-2px)}}
+  /* gestures: thinking (head tilt while a question is open), pointing (lean
+     toward what Mia asks about), puzzled-kind is .encourage, cheer is the jump */
+  .mascot-wrap.thinking .mascot{animation:thinktilt 2.2s ease-in-out infinite;}
+  @keyframes thinktilt{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(-2deg) translateY(-2px)}}
+  .mascot-wrap.pointing .mascot{animation:pointlean 1s ease-in-out infinite;}
+  @keyframes pointlean{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(4px) rotate(2.5deg)}}
+  .thumb-pop{
+    position:absolute; right:-18px; top:-16px; font-size:34px; z-index:3;
+    opacity:0; pointer-events:none;
+  }
+  .thumb-pop.pop{animation:thumbpop .9s ease;}
+  @keyframes thumbpop{
+    0%{opacity:0; transform:scale(.3) rotate(-14deg)}
+    30%{opacity:1; transform:scale(1.25) rotate(4deg)}
+    70%{opacity:1} 100%{opacity:0; transform:scale(1) translateY(-8px)}
+  }
+  .story-mia.waving{animation:miawave 1.5s ease 2;}
+  @keyframes miawave{0%,100%{transform:rotate(0)}25%{transform:rotate(-3.5deg)}75%{transform:rotate(3.5deg)}}
+  /* ---------- guests: one friend joins each activity (visual only) ---------- */
+  .guest-wrap{
+    width:100%; max-width:560px; display:flex; align-items:center; gap:10px; padding:10px 14px 0;
+  }
+  .guest-img{
+    width:74px; height:92px; object-fit:contain; background:#FFF6E0;
+    border:4px solid #fff; border-radius:16px; box-shadow:var(--card-shadow);
+    transform-origin:50% 100%; animation:breathe 3.4s ease-in-out infinite;
+  }
+  .guest-img.cheer{animation:cheer .62s ease 2;}
+  .guest-tag{
+    font-weight:800; font-size:16px; color:var(--deep); background:#fff;
+    border:3px solid #FFE1A1; border-radius:999px; padding:6px 14px; box-shadow:0 3px 0 #FFE1A1;
+  }
+  /* ---------- stage splash ---------- */
+  .splash{
+    width:100%; max-width:560px; text-align:center; padding:26px 18px 30px;
+  }
+  .splash .big{
+    font-size:clamp(26px,7vw,36px); font-weight:800; color:var(--deep); line-height:1.2;
+  }
+  .splash .sub{font-size:clamp(17px,5vw,21px); font-weight:800; color:#A07B4F; margin-top:8px;}
+  .splash img{
+    width:118px; height:118px; object-fit:cover; border-radius:50%; border:5px solid var(--gold);
+    margin-top:14px; transform-origin:50% 100%; animation:sway 2.6s ease-in-out infinite;
+    filter:drop-shadow(0 6px 6px rgba(178,58,31,.22));
+  }
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-3px)}}
+  /* ---------- overlays ---------- */
+  .overlay{
+    position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#E6F4F5 0%,#D8ECEE 100%); padding:24px 18px; text-align:center; overflow-y:auto;
+  }
+  .overlay[hidden]{display:none;}
+  .overlay h1{font-size:clamp(27px,7.4vw,38px); font-weight:800; line-height:1.15; color:var(--deep);}
+  .overlay h2{font-size:clamp(21px,6vw,27px); font-weight:800; color:var(--ink); margin-top:6px; line-height:1.25;}
+  .overlay p{font-size:16px; font-weight:700; color:#7A97A5; margin-top:10px; max-width:420px; line-height:1.45;}
+  .overlay .game-name{
+    background:#fff; border:3px solid #FFE1A1; color:#B97A0B; border-radius:999px;
+    font-weight:800; font-size:17px; padding:7px 18px; margin-bottom:14px; box-shadow:0 3px 0 #FFE1A1;
+  }
+  .big-btn{
+    margin-top:20px; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit;
+    font-size:26px; font-weight:800; border-radius:999px; padding:16px 44px;
+    box-shadow:0 7px 0 var(--teal-dark); transition:transform .12s, box-shadow .12s;
+  }
+  .big-btn:active{transform:translateY(5px); box-shadow:0 2px 0 var(--teal-dark);}
+  .mascot-dance{
+    width:118px; height:118px; object-fit:cover; border-radius:50%; border:5px solid var(--gold);
+    margin-top:8px; transform-origin:50% 100%; animation:dance .8s ease-in-out infinite;
+    filter:drop-shadow(0 7px 7px rgba(178,58,31,.25));
+  }
+  @keyframes dance{
+    0%,100%{transform:rotate(-4deg) translateY(0)}
+    50%{transform:rotate(4deg) translateY(-11px) scale(1.03)}
+  }
+  .moral-pill{
+    background:var(--teal); color:#fff; border-radius:999px; padding:10px 22px;
+    font-weight:800; font-size:17.5px; margin-top:12px; box-shadow:0 4px 0 var(--teal-dark); line-height:1.25;
+    display:inline-block;
+  }
+  .learn-lines{
+    margin-top:12px; background:#fff; border:3px solid #FFE1A1; border-radius:18px;
+    padding:10px 20px; font-weight:800; color:var(--deep); font-size:16.5px; line-height:1.55;
+    box-shadow:0 3px 0 #FFE1A1;
+  }
+  .learn-lines .learn-title{color:#B97A0B; font-size:13.5px; letter-spacing:1.5px;}
+  .big-score{
+    font-size:clamp(30px,8.4vw,44px); font-weight:800; color:#B97A0B; margin-top:10px; line-height:1.1;
+  }
+  .jar{
+    width:118px; height:130px; margin:12px auto 0; position:relative; overflow:hidden;
+    border:5px solid #E8A20C; border-top-width:11px; border-radius:16px 16px 28px 28px;
+    background:rgba(255,255,255,.55); box-shadow:inset 0 0 0 3px rgba(255,255,255,.5);
+  }
+  .jar-fill{
+    position:absolute; left:0; right:0; bottom:0; height:0%;
+    background:linear-gradient(180deg,#FFD968,#FFB52E); transition:height 1.3s ease .35s;
+  }
+  .jar-count{
+    position:absolute; left:0; right:0; bottom:9px; text-align:center;
+    font-size:23px; font-weight:800; color:#8A5A00;
+  }
+  .fall-star{position:fixed; top:-46px; z-index:30; pointer-events:none; animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(108dvh) rotate(320deg);}}
+  .confetti{position:fixed; top:-22px; z-index:30; pointer-events:none; border-radius:2px; animation:confall linear forwards;}
+  @keyframes confall{to{transform:translateY(108dvh) rotate(560deg);}}
+  .credit{font-size:12.5px; font-weight:700; color:#6E97A0; padding:0 10px 16px; text-align:center; margin-top:auto;}
+  @media (max-width:400px){
+    .story-mia{width:76px;}
+    .slot{width:32px; font-size:31px;}
+    .ltile{width:46px; height:52px; font-size:25px;}
+  }
+  @media (max-height:660px){
+    .mascot{width:64px; height:64px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01s !important; transition-duration:.01s !important;}
+  }
+  .seq-slots{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0;}
+  .seq-slot{min-width:64px; min-height:54px; border:3px dashed var(--bord1, #ccc); border-radius:14px;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;
+    padding:6px 8px; background:#fff; color:var(--ink);}
+  .seq-slot.filled{border-style:solid; border-color:var(--amber); background:var(--cream);}
+  .seq-slot img{width:44px; height:44px; object-fit:cover; border-radius:9px; margin-right:6px;}
+  .seq-tray{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px;}
+  .seq-card{background:#fff; border:3px solid var(--bord2, #ddd); border-radius:16px; padding:8px 10px;
+    font-family:inherit; font-weight:800; font-size:16px; color:var(--ink); cursor:pointer;
+    box-shadow:0 3px 0 var(--bord2, #ddd); display:flex; align-items:center; gap:8px;}
+  .seq-card img{width:52px; height:52px; object-fit:cover; border-radius:10px;}
+  .seq-card.used{visibility:hidden;}
+  .seq-card.wrong{animation:shake .4s;}
+  .sort-item{min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    font-size:22px; font-weight:800; color:var(--ink);}
+  .sort-item img{width:110px; height:110px; object-fit:cover; border-radius:16px; border:3px solid #fff;
+    box-shadow:0 6px 14px rgba(0,0,0,.15);}
+  .sort-bins{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
+  .sort-bin{background:var(--deep); color:#fff; border:none; border-radius:999px; padding:12px 20px;
+    font-family:inherit; font-weight:800; font-size:17px; cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,.18);}
+  .sort-bin.wrong{animation:shake .4s;}
+  .col-def{font-size:15.5px; font-weight:800; color:var(--deep); line-height:1.25; text-align:center; padding:0 4px;}
+  .col-word{font-size:17px; font-weight:800; color:var(--green-dark); line-height:1.1; text-align:center; margin-bottom:3px;}
+  .col-card{align-items:center; justify-content:center; text-align:center; font-size:18.5px; font-weight:800; color:var(--deep); padding:10px 8px; line-height:1.15;}
+  .chart-title{font-size:clamp(21px,6vw,26px); font-weight:800; color:var(--deep); text-align:center; margin-bottom:4px;}
+  .chart-head{font-size:14.5px; font-weight:800; color:#A07B4F; text-align:center; margin-bottom:8px;}
+  .chart-row{display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:#FFFDF6; border:3px solid #F9D2C9; border-radius:16px; padding:11px 13px; margin:7px 0; font-family:inherit; font-size:17.5px; font-weight:800; color:var(--ink); cursor:pointer; box-shadow:0 3px 0 #F9D2C9;}
+  .chart-row .box{flex:none; width:30px; height:30px; border:3px solid #F2A694; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:19px; color:#fff; background:#fff;}
+  .chart-row.done{border-color:var(--green); background:#EAF7EE; box-shadow:0 3px 0 var(--green-dark);}
+  .chart-row.done .box{background:var(--green); border-color:var(--green);}
+  .write-prompt{font-size:clamp(19px,5.4vw,23px); font-weight:700; line-height:1.42; text-align:center; color:var(--ink); padding:2px 2px 4px;}
+  #writeView .play-btn, #predictView .play-btn{display:block;}
+
+</style>
+</head>
+<body>
+
+  <!-- soft meadow background -->
+  <svg class="bg-hills" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true"><path d="M0,190 C240,110 420,240 720,190 C1020,140 1200,230 1440,170 L1440,320 L0,320 Z" fill="#CFE9EC"/><path d="M0,250 C260,190 520,290 820,250 C1100,215 1280,280 1440,240 L1440,320 L0,320 Z" fill="#AFD8DC" opacity=".7"/></svg>
+  <svg class="bg-grass" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C200,40 380,95 620,70 C860,45 1100,90 1440,60 L1440,120 L0,120 Z" fill="#F2A694"/></svg>
+  <div id="petals" aria-hidden="true"></div>
+
+  <!-- top bar -->
+  <div class="topbar">
+    <a class="home-btn" href="index.html">⌂ Chapters</a>
+    <div class="unit-chip">Chapter 15 · The Great Separation Challenge</div>
+    <div class="scorebox" id="scoreBox" aria-label="Your score">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6 L63 37 L96 39 L70 60 L79 93 L50 74 L21 93 L30 60 L4 39 L37 37 Z" fill="#FFC93C" stroke="#E8A20C" stroke-width="5" stroke-linejoin="round"/></svg>
+      <span>Score: <span id="scoreCount">0</span></span>
+    </div>
+  </div>
+
+  <!-- parent toggles: music + voice -->
+  <div class="toggles">
+    <button class="tgl" id="musicBtn" aria-pressed="true">🎵 Music</button>
+    <button class="tgl" id="voiceBtn" aria-pressed="true">🗣️ Voice</button>
+  </div>
+
+  <div class="partline" id="partLine">Part 3 · The Matter Lab</div>
+
+  <!-- Mia + his speech bubble (tap Mia to hear him say it again) -->
+  <div class="dock" id="dock" role="button" aria-label="Mia. Tap to hear her again.">
+    <div class="mascot-wrap" id="mascotWrap">
+      <img class="mascot" id="mascot" src="img/mia-face.jpg" alt="Mia, your science friend, smiling at you">
+      <div class="mouth" id="mouth" aria-hidden="true"></div>
+      <div class="thumb-pop" id="thumbPop" aria-hidden="true">👍</div>
+    </div>
+    <div class="bubble" id="speech">Hello! I am Mia!</div>
+  </div>
+
+  <div class="praise" id="praise" aria-live="polite"></div>
+
+  <!-- INTRO: Mia says hello and SPEAKS the chapter's core line.
+       There is NO reading stage — this is not a reading book (owner). -->
+  <div id="introView">
+    <div class="story-wrap">
+      <img class="story-mia" id="storyMia" src="img/mia-stage.jpg" alt="Mia waving hello" draggable="false">
+      <div class="story-card">
+        <div class="story-title">⭐ The Great Separation Challenge ⭐</div>
+        <p class="intro-text">Play and learn with Mia!</p>
+      </div>
+    </div>
+    <button class="play-btn" id="playBtn">▶ Let's Play!</button>
+  </div>
+
+
+  <!-- STAGE 1: the book's Key Words box — Mia says a word, you touch it -->
+  <div id="vocabView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-ruby.jpg" alt="Ruby"><span class="guest-tag">Ruby</span></div>
+    <div class="vocab-card">
+      <div class="vocab-title">⭐ Key Words ⭐</div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </div>
+  </div>
+
+  <!-- STAGE 3a: Match the Column — the book's own activity, spoken by Mia -->
+  <div id="colView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-noor.jpg" alt="Noor"><span class="guest-tag">Noor</span></div>
+    <div class="match-tiles" id="colTiles"></div>
+    <div class="tray" id="colTray"></div>
+  </div>
+
+  <!-- STAGE 4: My Chart — the book's own chart activity, tap to tick -->
+  <div id="chartView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-max.jpg" alt="Max"><span class="guest-tag">Max</span></div>
+    <div class="tick-card">
+      <div class="chart-title" id="chartTitle"></div>
+      <div class="chart-head" id="chartHead"></div>
+      <div id="chartRows"></div>
+    </div>
+  </div>
+
+  <!-- STAGE 5: Think and Write — the book's own writing activity -->
+  <div id="writeView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-zoe.jpg" alt="Zoe"><span class="guest-tag">Zoe</span></div>
+    <div class="fill-card">
+      <div class="chart-title" id="writeTitle"></div>
+      <div class="write-prompt" id="writePrompt"></div>
+      <button class="play-btn" id="writeBtn">✏️ I wrote my answer!</button>
+    </div>
+  </div>
+
+  <!-- STAGE 6: Predict! — the book's investigation prediction -->
+  <div id="predictView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-ruby.jpg" alt="Ruby"><span class="guest-tag">Ruby</span></div>
+    <div class="tick-card">
+      <div class="tick-statement" id="predictText"></div>
+      <button class="play-btn" id="predictBtn">🔮 I made my prediction!</button>
+    </div>
+  </div>
+
+  <!-- STAGE 8: Mia Asks — the chapter's Check MCQs (Mia alone for the finale) -->
+  <div id="quizView" hidden>
+    <div class="opts" id="opts"></div>
+  </div>
+
+
+  <!-- stage splash (between stages) -->
+  <div id="splashView" hidden>
+    <div class="splash">
+      <div class="big" id="splashTitle">Stage 1 · Key Words!</div>
+      <div class="sub" id="splashSub">Mia says a word — can you touch it?</div>
+      <img id="splashImg" src="img/mia-stage.jpg" alt="Mia">
+    </div>
+  </div>
+
+  <!-- STAGE 5: Fill in the Blanks — the book's own activity, spoken by Mia -->
+  <div id="fillView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-zoe.jpg" alt="Zoe"><span class="guest-tag">Zoe</span></div>
+    <div class="fill-card">
+      <div class="fill-sentence" id="fillSentence"></div>
+      <div class="fill-tiles" id="fillTiles"></div>
+    </div>
+  </div>
+
+  <!-- STAGE 4a: Match It — the New Words and their pictures -->
+  <div id="matchView" hidden>
+    <div class="guest-wrap"><img class="guest-img" src="img/guest-sam.jpg" alt="Sam"><span class="guest-tag">Sam</span></div>
+    <div class="match-tiles" id="matchTiles"></div>
+    <div class="tray" id="tray"></div>
+  </div>
+
+  <div class="credit">✦ Prepared by: Zulfiqar Ali Sajid ✦</div>
+
+  <!-- end overlay -->
+  <div class="overlay" id="endOverlay" hidden>
+    <div class="game-name">🎉 All Done!</div>
+    <h1>Well done,<br>little scientist!</h1>
+    <img class="mascot-dance" src="img/mia-stage.jpg" alt="Mia dancing">
+    <div class="moral-pill">⭐ I can choose a suitable method for a mixture. ⭐</div>
+    <div class="learn-lines"><div class="learn-title">YOU WILL LEARN TO</div><div>✓ look at a mixture and name its parts</div><div>✓ choose a suitable method for a mixture</div><div>✓ explain why the method works</div><div>✓ write the steps of a plan in order</div><div>✓ carry out a plan and check the result</div><div>✓ present my plan and result to the class</div></div>
+    <div class="jar"><div class="jar-fill" id="jarFill"></div><div class="jar-count">★ <span id="jarCount">0</span></div></div>
+    <div class="big-score" id="finalText">Your Score: 23 ⭐</div>
+    <p>Mia is so proud of you!</p>
+    <button class="big-btn" id="againBtn">↻ Play Again</button>
+    <p><a href="index.html" style="color:#095A62; font-weight:800;">⌂ More chapter games</a></p>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STAR = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6 L63 37 L96 39 L70 60 L79 93 L50 74 L21 93 L30 60 L4 39 L37 37 Z" fill="#FFC93C" stroke="#E8A20C" stroke-width="5" stroke-linejoin="round"/></svg>';
+  /* ============ CHAPTER 15 — everything from the book itself ============
+     Source: the chapter itself (see games-work audit).
+     FORMULA (same as Grade 1 games): NO reading stage. Mia opens by
+     SPEAKING the chapter's core line (Lesson 1's opening); then come
+     the Key Words, the chapter's printed activities as stages (Match,
+     Match the Column or Fill in the Blanks, the chart, Think and Write,
+     Predict), and Mia Asks (the Check MCQs)
+     as the finale. Answer keys derived semantically — see audit-ch1.md. */
+  var CORE_LINE = "To separate a mixture, look first and name its parts, then choose the method that fits — and explain the property that makes it work.";
+  var GREETING = "Hello, little scientist! I am Mia. " + CORE_LINE;
+  var OUTCOME = "I can choose a suitable method for a mixture.";
+  var WORDS = [{"id": "method", "word": "method", "def": "a way of doing a job"}, {"id": "suitable", "word": "suitable", "def": "right and fit for the job"}, {"id": "plan", "word": "plan", "def": "steps written in order first"}, {"id": "justify", "word": "justify", "def": "give a good reason for a choice"}, {"id": "reason", "word": "reason", "def": "why something works or happens"}, {"id": "challenge", "word": "challenge", "def": "a difficult job that tests you"}, {"id": "decide", "word": "decide", "def": "to choose after thinking carefully"}, {"id": "communicate", "word": "communicate", "def": "to tell others clearly"}];
+  var WORD_ART = {"method": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">M</text></svg>"}, "suitable": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">S</text></svg>"}, "plan": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">P</text></svg>"}, "justify": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">J</text></svg>"}, "reason": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">R</text></svg>"}, "challenge": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">C</text></svg>"}, "decide": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">D</text></svg>"}, "communicate": {"svg": "<svg viewBox=\"0 0 120 70\"><rect width=\"120\" height=\"70\" rx=\"13\" fill=\"#E85D3D\"/><circle cx=\"14\" cy=\"12\" r=\"4\" fill=\"#FFFFFF\" opacity=\".45\"/><circle cx=\"106\" cy=\"58\" r=\"5\" fill=\"#FFFFFF\" opacity=\".35\"/><text x=\"60\" y=\"48\" font-size=\"32\" font-weight=\"800\" fill=\"#FFFFFF\" text-anchor=\"middle\">C</text></svg>"}};
+  var MATCH_PAIRS = [{"id": "sieve", "word": "Sieve", "img": "img/c15-match-sieve.jpg", "alt": "Sieve", "job": "Shakes out the big bits", "line": "Shakes out the big bits"}, {"id": "magnet", "word": "Magnet", "img": "img/c15-match-magnet.jpg", "alt": "Magnet", "job": "Pulls out iron filings", "line": "Pulls out iron filings"}, {"id": "filter-funnel", "word": "Filter funnel", "img": "img/c15-match-filter-funnel.jpg", "alt": "Filter funnel", "job": "Catches the mud", "line": "Catches the mud"}, {"id": "evaporating-dish", "word": "Evaporating dish", "img": "img/c15-match-evaporating-dish.jpg", "alt": "Evaporating dish", "job": "Sun dries the water away", "line": "Sun dries the water away"}];
+  var SLOT = "matchcol";
+  var MATCHCOL_PAIRS = [{"id": "muddy-water", "word": "Muddy water", "def": "Filtering: catches the mud"}, {"id": "salt-water", "word": "Salt water", "def": "Evaporation: dries water away"}, {"id": "sand-with-iron-filings", "word": "Sand with iron filings", "def": "Magnet: pulls out the iron"}, {"id": "rice-with-tiny-stones", "word": "Rice with tiny stones", "def": "Sieving: shakes out small bits"}, {"id": "salty-sand", "word": "Salty sand", "def": "Dissolve, filter, evaporate"}];
+  var FILL_ITEMS = [];
+  var CHART_TITLE = "My Separation Challenge Chart";
+  var CHART_HEAD = "Separation challenge jobs";
+  var CHART_ROWS = ["Look at a mixture and name its parts", "Choose a method and say the reason", "Write my steps in the right order", "Separate a mixture with my team", "Tell the class my plan and result"];
+  var WRITE_TITLE = "Think and Write";
+  var WRITE_PROMPT = "Your friend wants to filter salty water to get the salt back. Write two or three sentences to tell him why filtering will fail, and which method he should choose instead.";
+  var PREDICT_TEXT = "Which mystery mixture will be the easiest to separate — A, B or C?";
+  var MCQS = [{"q": "Salty water is in a dish. How can you get the salt back?", "ans": "leave-it-in-the-sun-to-evaporate", "opts": [{"id": "leave-it-in-the-sun-to-evaporate", "word": "leave it in the sun to evaporate"}, {"id": "filter-it-through-paper", "word": "filter it through paper"}, {"id": "hold-a-magnet-over-it", "word": "hold a magnet over it"}]}, {"q": "Muddy water must be cleaned. Why is filtering best?", "ans": "the-filter-catches-mud-water-passes", "opts": [{"id": "the-mud-is-magnetic", "word": "the mud is magnetic"}, {"id": "the-filter-catches-mud-water-passes", "word": "the filter catches mud, water passes"}, {"id": "the-mud-dissolves-in-water", "word": "the mud dissolves in water"}]}, {"q": "Iron filings are mixed into dry sand. The best method is —", "ans": "a-magnet", "opts": [{"id": "evaporation", "word": "evaporation"}, {"id": "filtering", "word": "filtering"}, {"id": "a-magnet", "word": "a magnet"}]}, {"q": "Why does a sieve separate peas from flour?", "ans": "peas-are-too-big-to-pass-the-holes", "opts": [{"id": "peas-are-too-big-to-pass-the-holes", "word": "peas are too big to pass the holes"}, {"id": "the-flour-is-magnetic", "word": "the flour is magnetic"}, {"id": "the-peas-dissolve-in-flour", "word": "the peas dissolve in flour"}]}, {"q": "A mixture is sand and water. Which plan is in the right order?", "ans": "filter-then-dry-the-wet-sand", "opts": [{"id": "evaporate-then-use-a-magnet", "word": "evaporate, then use a magnet"}, {"id": "use-a-magnet-then-evaporate", "word": "use a magnet, then evaporate"}, {"id": "filter-then-dry-the-wet-sand", "word": "filter, then dry the wet sand"}]}, {"q": "Salt dissolves in water, so filtering alone will NOT work because —", "ans": "dissolved-salt-passes-through-too", "opts": [{"id": "the-paper-is-too-thin", "word": "the paper is too thin"}, {"id": "dissolved-salt-passes-through-too", "word": "dissolved salt passes through too"}, {"id": "the-salt-is-far-too-heavy", "word": "the salt is far too heavy"}]}, {"q": "Your team must separate rice and tiny stones. First you should —", "ans": "look-closely-and-check-the-sizes", "opts": [{"id": "pour-in-lots-of-water-at-once", "word": "pour in lots of water at once"}, {"id": "put-a-magnet-into-the-rice", "word": "put a magnet into the rice"}, {"id": "look-closely-and-check-the-sizes", "word": "look closely and check the sizes"}]}, {"q": "Which reason best justifies using a magnet on sand and iron?", "ans": "iron-is-pulled-to-a-magnet-sand-is-not", "opts": [{"id": "iron-is-pulled-to-a-magnet-sand-is-not", "word": "iron is pulled to a magnet, sand is not"}, {"id": "iron-is-heavier-than-dry-sand", "word": "iron is heavier than dry sand"}, {"id": "sand-dissolves-faster-than-iron", "word": "sand dissolves faster than iron"}]}, {"q": "After filtering, the water still looks cloudy. The best next step is —", "ans": "filter-again-with-fresh-paper", "opts": [{"id": "add-more-mud-to-it", "word": "add more mud to it"}, {"id": "evaporate-all-the-water", "word": "evaporate all the water"}, {"id": "filter-again-with-fresh-paper", "word": "filter again with fresh paper"}]}, {"q": "Sand is mixed into salt. Which plan gives pure salt at the end?", "ans": "dissolve-filter-then-evaporate", "opts": [{"id": "sieve-it-dry-and-keep-the-sand", "word": "sieve it dry and keep the sand"}, {"id": "dissolve-filter-then-evaporate", "word": "dissolve, filter, then evaporate"}, {"id": "pick-out-grains-with-a-magnet", "word": "pick out grains with a magnet"}]}];
+  var MAX_SCORE = 34;
+  var PRAISE = ["Great job! ⭐", "Well done! ⭐", "Super! ⭐", "Yes! That's right! ⭐", "Hooray! ⭐"];
+
+  /* ---------- tiny helpers ---------- */
+  function shuffle(a){
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function buzz(){ try{ if(navigator.vibrate){ navigator.vibrate(30); } }catch(e){} }
+  function cap1(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* ---------- audio: WebAudio, created on first tap ---------- */
+  var actx = null, musicGain = null;
+  function audio(){
+    if(!actx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(AC){ try{ actx = new AC(); }catch(e){ actx = null; } }
+      if(actx){
+        try{ musicGain = actx.createGain(); musicGain.gain.value = .9; musicGain.connect(actx.destination); }catch(e){ musicGain = null; }
+      }
+    }
+    if(actx && actx.state === "suspended"){ actx.resume(); }
+    return actx;
+  }
+  function toneAt(freq, t, dur, type, vol, dest){
+    var ac = actx; if(!ac) return;
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.16, t + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(dest || ac.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function tone(freq, t0, dur, type, vol){
+    var ac = audio(); if(!ac) return;
+    toneAt(freq, ac.currentTime + t0, dur, type, vol, ac.destination);
+  }
+  function chimeRight(){ tone(523.25,0,.22); tone(659.25,.09,.22); tone(783.99,.18,.3); tone(1046.5,.27,.42); }
+  function chimeWrong(){ tone(294,0,.2,"triangle",.08); tone(233,.12,.26,"triangle",.08); }
+  function chimeWin(){ var n=[523.25,659.25,783.99,1046.5,783.99,1046.5,1318.5]; for(var i=0;i<n.length;i++){ tone(n[i], i*.13, .34); } }
+  function popSound(){ tone(500,0,.07,"triangle",.06); tone(760,.05,.09,"triangle",.05); }
+
+  /* ---------- background music: gentle pentatonic marimba loop, in code ---------- */
+  var MEL_A = [659.25,783.99,880,783.99, 659.25,587.33,659.25,783.99, 880,1046.5,880,783.99, 659.25,783.99,659.25,587.33];
+  var MEL_B = [523.25,659.25,783.99,880, 783.99,659.25,587.33,659.25, 698.46,880,783.99,659.25, 587.33,659.25,0,0];
+  var BASSN = [130.81, 98.00, 110.00, 98.00];
+  var STEP_DUR = 0.24;
+  var musicOn = true, musicPlaying = false, musStep = 0, musNext = 0, musTimer = null;
+  function scheduleStep(s, t){
+    var mel = ((Math.floor(s/16) % 2 === 0) ? MEL_A : MEL_B)[s % 16];
+    var dest = musicGain || actx.destination;
+    if(mel > 0){
+      toneAt(mel, t, .34, "sine", .05, dest);
+      toneAt(mel*2, t, .12, "sine", .012, dest);
+    }
+    if(s % 8 === 0){ toneAt(BASSN[(s >> 3) % 4], t, .55, "triangle", .04, dest); }
+    if(s % 16 === 15){ toneAt(1567.98, t, .3, "sine", .014, dest); }
+  }
+  function musicScheduler(){
+    if(!actx) return;
+    while(musNext < actx.currentTime + 0.20){
+      scheduleStep(musStep, musNext);
+      musNext += STEP_DUR; musStep++;
+    }
+  }
+  function startMusic(){
+    if(!musicOn || musicPlaying) return;
+    var ac = audio(); if(!ac) return;
+    musStep = 0; musNext = ac.currentTime + 0.08;
+    musTimer = setInterval(musicScheduler, 90);
+    musicPlaying = true;
+  }
+  function stopMusic(){
+    if(musTimer){ clearInterval(musTimer); musTimer = null; }
+    musicPlaying = false;
+  }
+
+  /* ---------- voice: Mia speaks (Web Speech API), graceful fallback ---------- */
+  var hasSpeech = ("speechSynthesis" in window);
+  var voiceOn = hasSpeech, voiceCache = null;
+  function pickVoice(){
+    if(!hasSpeech) return null;
+    try{
+      var vs = window.speechSynthesis.getVoices();
+      if(vs && vs.length){ voiceCache = vs; }
+      var list = voiceCache || vs || [], best = null, bestScore = -1, i, v, name, lang, s;
+      for(i=0;i<list.length;i++){
+        v = list[i]; name = v.name || ""; lang = v.lang || "";
+        if(!/^en/i.test(lang)) continue;
+        s = 0;
+        if(/google us english/i.test(name)) s += 60;   /* Chrome's most natural */
+        if(/natural/i.test(name)) s += 45;              /* Microsoft Natural voices */
+        if(/neural/i.test(name)) s += 45;
+        if(/premium|enhanced/i.test(name)) s += 35;
+        if(/google/i.test(name)) s += 25;
+        if(/aria|jenny|zira|samantha|allison|ava|joanna|salli|emma|amy|bella|ana|michelle|katie|lucy|linda|susan|catherine|karen|sarah|jessica|ashley/i.test(name)) s += 30;  /* female natural voices — Mia is a girl */
+        if(/female/i.test(name)) s += 25;
+        if(/guy|christopher|eric|roger|brian|james|john|david|mark|kevin|andrew|brandon/i.test(name)) s -= 15;  /* known male voices */
+        if(/en[-_]US/i.test(lang)) s += 15;
+        else if(/en[-_]GB/i.test(lang)) s += 10;
+        else s += 4;
+        if(v.localService === false) s += 2;
+        if(s > bestScore){ bestScore = s; best = v; }
+      }
+      return best;
+    }catch(e){}
+    return null;
+  }
+  if(hasSpeech){
+    try{ window.speechSynthesis.onvoiceschanged = function(){ pickVoice(); }; pickVoice(); }catch(e){}
+  }
+  /* Speech waits for the child's first tap: browsers will not speak before a
+     user gesture (and speechless test builds wedge if asked earlier). Until
+     then the words wait — the newest one is spoken the moment the game is
+     first touched. Mia's bubble always shows the words on screen anyway. */
+  var speechUnlocked = false, pendingSay = null, pendingEmo = "instruct";
+  /* Mia speaks. EMOTION LAYER (owner standard): every line carries an
+     emotion; expression comes from pitch movement, pauses and energy —
+     the RATE is locked at 0.85 (owner: "thoda aur slow") for ALL speech.
+       story    warm storytelling, pitch drifts 0.98-1.08 (set per sentence)
+       question curious, inviting - pitch lifts to 1.10
+       praise   bright and happy - 1.20, with Mia's cheer + thumb pop
+       retry    soft and kind - 0.95, never scolding
+       instruct friendly neutral - 1.05
+     While Mia speaks, his lips move: the mouth overlay opens and closes,
+     driven by the utterance lifecycle (onstart/onend) and word boundaries. */
+  var EMO_PITCH = {story:1.03, question:1.10, praise:1.20, retry:0.95, instruct:1.05};
+  /* SPEECH QUEUE (owner rule, 2026-10-30: "ye lines usy pori bolny dain
+     phir agy jai" — let Mia finish his line, THEN the game moves on).
+     Lines are spoken one at a time, in order; a new line NEVER cancels the
+     line Mia is speaking — it waits its turn. The game itself advances
+     only through afterMia(), which waits for this queue to drain. Every
+     utterance carries a bounded watchdog: if a device's TTS never fires
+     onend (dead or silent speech), the line is released after an estimated
+     duration, so the game can never hang on Mia's voice. */
+  var sayQ = [], sayBusy = false, sayWdog = null, sayWaiters = [], saySeq = 0;
+  function sayEstimateMs(text){
+    var words = (text || "").split(/\s+/).filter(Boolean).length;
+    return Math.max(4000, Math.min(1800 + words * 620, 25000));
+  }
+  function speechActive(){
+    return !!(voiceOn && hasSpeech && speechUnlocked && (sayBusy || sayQ.length));
+  }
+  function releaseSayWaiters(){
+    if(sayBusy || sayQ.length) return;
+    var ws = sayWaiters; sayWaiters = [];
+    for(var i = 0; i < ws.length; i++){ try{ ws[i](); }catch(e){} }
+  }
+  /* cb runs once Mia has finished everything he has to say. With the
+     voice off (or no speech at all) it runs at once — nothing to hear. */
+  function whenSpeechDone(cb){
+    if(!speechActive()){ cb(); return; }
+    sayWaiters.push(cb);
+  }
+  /* The ONLY way the game moves forward after Mia speaks: wait for his
+     line to end, and never less than minMs (the appreciation beat — the
+     praise panel and the green tick stay visible about as long as ever). */
+  function afterMia(cb, minMs){
+    var t0 = Date.now();
+    whenSpeechDone(function(){
+      var wait = (minMs || 0) - (Date.now() - t0);
+      if(wait > 0){ setTimeout(cb, wait); } else { cb(); }
+    });
+  }
+  function pumpSpeech(){
+    if(sayBusy) return;
+    var item = sayQ.shift();
+    if(!item){ releaseSayWaiters(); return; }
+    sayBusy = true;
+    var gen = saySeq, finished = false;
+    function done(){
+      if(finished || gen !== saySeq) return;
+      finished = true;
+      if(sayWdog){ clearTimeout(sayWdog); sayWdog = null; }
+      sayBusy = false;
+      miaTalk(false);
+      pumpSpeech();
+    }
+    var u;
+    try{ u = new SpeechSynthesisUtterance(item.text); }
+    catch(e){ sayBusy = false; pumpSpeech(); return; }
+    u.lang = "en-US"; u.rate = 0.85; u.pitch = EMO_PITCH[item.emo] || 1.05;
+    var v = pickVoice(); if(v){ try{ u.voice = v; }catch(e){} }
+    u.onstart = function(){ if(gen === saySeq){ miaTalk(true, item.emo); } };
+    u.onend = done;
+    u.onerror = done;
+    u.onboundary = function(){ if(gen === saySeq){ miaPulse(); } };
+    sayWdog = setTimeout(done, sayEstimateMs(item.text));
+    try{ window.speechSynthesis.speak(u); }
+    catch(e){ done(); }
+  }
+  function speak(text, emo){
+    if(!voiceOn || !hasSpeech || !text) return;
+    emo = emo || "instruct";
+    if(!speechUnlocked){ pendingSay = text; pendingEmo = emo; return; }
+    /* a fast-tapping child cannot stack the same line over and over */
+    var last = sayQ[sayQ.length - 1];
+    if(last && last.text === text && last.emo === emo) return;
+    sayQ.push({text:text, emo:emo});
+    pumpSpeech();
+  }
+  window.addEventListener("pointerdown", function(){
+    if(speechUnlocked) return;
+    speechUnlocked = true;
+    if(pendingSay){ var t = pendingSay, pe = pendingEmo; pendingSay = null; speak(t, pe); }
+  }, true);
+  function stopSpeak(){
+    saySeq++; /* stale utterance callbacks from before the stop are ignored */
+    sayQ.length = 0;
+    if(sayWdog){ clearTimeout(sayWdog); sayWdog = null; }
+    sayBusy = false;
+    miaTalk(false);
+    if(hasSpeech){ try{ window.speechSynthesis.cancel(); }catch(e){} }
+    releaseSayWaiters(); /* a gated step is never left hanging */
+  }
+
+  /* ---------- toggles (parent controls, persist in-page) ---------- */
+  var musicBtn = document.getElementById("musicBtn"),
+      voiceBtn = document.getElementById("voiceBtn");
+  if(!hasSpeech){ voiceBtn.style.display = "none"; }
+  musicBtn.addEventListener("click", function(){
+    musicOn = !musicOn;
+    musicBtn.classList.toggle("off", !musicOn);
+    musicBtn.setAttribute("aria-pressed", musicOn ? "true" : "false");
+    if(musicOn){ startMusic(); } else { stopMusic(); }
+  });
+  voiceBtn.addEventListener("click", function(){
+    voiceOn = !voiceOn;
+    voiceBtn.classList.toggle("off", !voiceOn);
+    voiceBtn.setAttribute("aria-pressed", voiceOn ? "true" : "false");
+    if(!voiceOn){ stopSpeak(); }
+  });
+
+  /* ---------- drifting petals ---------- */
+  (function petals(){
+    var box = document.getElementById("petals");
+    var colours = ["#CDEFF2","#E6F4F5","#FFE9A8","#BFE6EA"];
+    for(var i=0;i<9;i++){
+      var p = document.createElement("span");
+      p.className = "petal";
+      var w = 9 + Math.random()*8;
+      p.style.width = w + "px"; p.style.height = (w*1.35) + "px";
+      p.style.left = (Math.random()*96) + "vw";
+      p.style.background = colours[i % colours.length];
+      p.style.animationDuration = (11 + Math.random()*9) + "s";
+      p.style.animationDelay = (-Math.random()*16) + "s";
+      box.appendChild(p);
+    }
+  })();
+
+  /* ---------- shared UI pieces ---------- */
+  var speechEl = document.getElementById("speech"),
+      praiseEl = document.getElementById("praise"),
+      partLineEl = document.getElementById("partLine"),
+      scoreBox = document.getElementById("scoreBox"),
+      scoreCountEl = document.getElementById("scoreCount"),
+      mascotEl = document.getElementById("mascot"),
+      dockEl = document.getElementById("dock"),
+      introView = document.getElementById("introView"),
+      vocabView = document.getElementById("vocabView"),
+      colView = document.getElementById("colView"),
+      quizView = document.getElementById("quizView"),
+      splashView = document.getElementById("splashView"),
+      matchView = document.getElementById("matchView"),
+      fillView = document.getElementById("fillView"),
+      chartView = document.getElementById("chartView"),
+      writeView = document.getElementById("writeView"),
+      predictView = document.getElementById("predictView"),
+      storyMiaEl = document.getElementById("storyMia"),
+      playBtn = document.getElementById("playBtn"),
+      colTilesEl = document.getElementById("colTiles"),
+      colTrayEl = document.getElementById("colTray"),
+      chartTitleEl = document.getElementById("chartTitle"),
+      chartHeadEl = document.getElementById("chartHead"),
+      chartRowsEl = document.getElementById("chartRows"),
+      writeTitleEl = document.getElementById("writeTitle"),
+      writePromptEl = document.getElementById("writePrompt"),
+      writeBtnEl = document.getElementById("writeBtn"),
+      predictTextEl = document.getElementById("predictText"),
+      predictBtnEl = document.getElementById("predictBtn"),
+      fillSentenceEl = document.getElementById("fillSentence"),
+      fillTilesEl = document.getElementById("fillTiles"),
+      vocabGridEl = document.getElementById("vocabGrid"),
+      optsEl = document.getElementById("opts"),
+      tilesEl = document.getElementById("matchTiles"),
+      trayEl = document.getElementById("tray"),
+      splashTitleEl = document.getElementById("splashTitle"),
+      splashSubEl = document.getElementById("splashSub"),
+      mascotWrap = document.getElementById("mascotWrap"),
+      thumbPopEl = document.getElementById("thumbPop"),
+      splashImgEl = document.getElementById("splashImg");
+
+  var score = 0, accepting = false, lastPrompt = "";
+  function updateScore(bumpIt){
+    scoreCountEl.textContent = score;
+    if(bumpIt){ scoreBox.classList.remove("bump"); void scoreBox.offsetWidth; scoreBox.classList.add("bump"); }
+  }
+  function award(){
+    score++; updateScore(true);
+  }
+  function burstIn(container, leftPct, topPct, n){
+    for(var i=0;i<(n||7);i++){
+      var s = document.createElement("div");
+      s.className = "burst-star"; s.innerHTML = STAR;
+      var size = 18 + Math.random()*18;
+      s.style.width = size+"px"; s.style.height = size+"px";
+      s.style.left = leftPct+"%"; s.style.top = topPct+"%";
+      s.style.setProperty("--dx", (Math.random()*260-130)+"px");
+      s.style.setProperty("--dy", (Math.random()*-160-30)+"px");
+      container.appendChild(s);
+      (function(el){ setTimeout(function(){ el.remove(); }, 900); })(s);
+    }
+  }
+  /* ---------- Mia's body language ----------
+     Mia is the speaker and the most active character in every stage:
+     his lips move while he talks, he waves hello, points at what he asks
+     about, tilts his head thinking while a question is open, cheers with a
+     thumbs-up on every correct answer, and looks puzzled-but-kind on a
+     wrong try (the "encourage" tilt). The current stage's guest friend
+     cheers along — visually only; friends never speak. */
+  function miaTalk(on, emo){
+    if(!mascotWrap) return;
+    if(emo){ mascotWrap.dataset.emotion = emo; }
+    mascotWrap.classList.toggle("speaking", !!on);
+    if(!on){ mascotWrap.classList.remove("pulse"); }
+  }
+  function miaPulse(){
+    if(!mascotWrap) return;
+    mascotWrap.classList.remove("pulse"); void mascotWrap.offsetWidth; mascotWrap.classList.add("pulse");
+    setTimeout(function(){ mascotWrap.classList.remove("pulse"); }, 280);
+  }
+  function thumbPopNow(){
+    if(!thumbPopEl) return;
+    thumbPopEl.classList.remove("pop"); void thumbPopEl.offsetWidth; thumbPopEl.classList.add("pop");
+  }
+  function guestCheer(){
+    var gs = document.querySelectorAll(".guest-img");
+    for(var i=0;i<gs.length;i++){
+      if(gs[i].offsetParent !== null){
+        gs[i].classList.remove("cheer"); void gs[i].offsetWidth; gs[i].classList.add("cheer");
+      }
+    }
+  }
+  function waveMia(){
+    storyMiaEl.classList.remove("waving"); void storyMiaEl.offsetWidth;
+    storyMiaEl.classList.add("waving");
+    setTimeout(function(){ storyMiaEl.classList.remove("waving"); }, 3400);
+  }
+  function pointMia(){
+    if(!mascotWrap) return;
+    mascotWrap.classList.add("pointing");
+    setTimeout(function(){ mascotWrap.classList.remove("pointing"); }, 1400);
+  }
+  function mascotReact(cls){
+    mascotEl.classList.remove("cheer","encourage"); void mascotEl.offsetWidth;
+    if(cls){ mascotEl.classList.add(cls); }
+    if(cls === "cheer"){ thumbPopNow(); guestCheer(); }
+  }
+  function say(text, emo){
+    speechEl.textContent = text;
+    lastPrompt = text;
+    if(emo === false) return;
+    speak(text, (typeof emo === "string") ? emo : "instruct");
+  }
+  function praise(text){
+    praiseEl.textContent = text; praiseEl.classList.add("show");
+  }
+  function clearPraise(){
+    praiseEl.textContent = ""; praiseEl.classList.remove("show");
+  }
+  /* the heart of the design: EVERY correct touch is appreciated — spoken praise,
+     a happy Mia, a chime and a star burst */
+  function onCorrect(feedbackEl){
+    accepting = false;
+    award();
+    var p = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    praise(p);
+    mascotReact("cheer");
+    chimeRight(); buzz();
+    speak(p, "praise");
+    if(feedbackEl){ burstIn(feedbackEl, 50, 40, 6); }
+  }
+  function onWrong(){
+    praise("Try again! 🙂");
+    mascotReact("encourage");
+    chimeWrong();
+  }
+  function showView(v){
+    introView.hidden = v !== "intro";
+    vocabView.hidden = v !== "vocab";
+    colView.hidden = v !== "col";
+    quizView.hidden = v !== "quiz";
+    splashView.hidden = v !== "splash";
+    matchView.hidden = v !== "match";
+    fillView.hidden = v !== "fill";
+    chartView.hidden = v !== "chart";
+    writeView.hidden = v !== "write";
+    predictView.hidden = v !== "predict";
+  }
+  function splash(title, sub, partLabel, nextFn, imgSrc){
+    clearPraise();
+    partLineEl.textContent = partLabel;
+    showView("splash");
+    splashTitleEl.textContent = title;
+    splashSubEl.textContent = sub;
+    if(imgSrc && splashImgEl){ splashImgEl.src = imgSrc; }
+    accepting = false;
+    say(title, "instruct");
+    afterMia(nextFn, 1600); /* Mia finishes the title line before the stage opens */
+  }
+  /* tap Mia (or his speech bubble) to hear the last thing he said again */
+  dockEl.addEventListener("click", function(){
+    audio();
+    if(lastPrompt){ speak(lastPrompt); }
+  });
+
+  /* preload */
+  ["img/mia-stage.jpg", "img/mia-face.jpg", "img/hero.jpg", "img/c15-match-sieve.jpg", "img/c15-match-magnet.jpg", "img/c15-match-filter-funnel.jpg", "img/c15-match-evaporating-dish.jpg", "img/guest-ruby.jpg", "img/guest-sam.jpg", "img/guest-noor.jpg", "img/guest-zoe.jpg", "img/guest-max.jpg"]
+    .forEach(function(s){ var i = new Image(); i.src = s; });
+
+  /* ================= INTRO — BOLT SAYS HELLO =================
+     No reading stage (owner: this is not a reading book). Mia greets
+     the child and SPEAKS the chapter's core line + his own book line;
+     the bubble shows his words, as everywhere in the game.
+     INTRO GATE (owner, 2026-10-30: "Hello I am mia.....ye lines usy
+     pori bolny dain phir agy jai"): the first tap unlocks speech and Mia
+     says his lines IN FULL. While he is talking, the button waits —
+     dimmed, "Listen to Mia…" — and tapping it does nothing. The moment
+     his last intro line ends, the button lights up (pulse) and the next
+     tap starts the game. With the voice OFF there is nothing to hear, so
+     the gate releases at once; if a device's speech dies silently, the
+     speech watchdogs release the gate — the button can never stay dead. */
+  var introDone = false, introTalking = false, introArmed = false;
+  playBtn.addEventListener("click", function(){
+    audio();
+    if(introDone) return;
+    if(introArmed){ /* Mia has finished his hello — NOW the game starts */
+      introDone = true;
+      playBtn.disabled = true;
+      playBtn.classList.remove("ready");
+      playBtn.classList.add("listening");
+      playBtn.innerHTML = "🎉 Let's go!";
+      startStage1();
+      return;
+    }
+    if(introTalking) return; /* Mia is mid-line: the tap changes nothing */
+    introTalking = true;
+    startMusic();
+    waveMia();
+    playBtn.disabled = true;
+    playBtn.classList.add("waiting");
+    playBtn.innerHTML = "👂 Listen to Mia…";
+    say(GREETING, "instruct");
+    whenSpeechDone(function(){
+      introTalking = false;
+      introArmed = true;
+      playBtn.disabled = false;
+      playBtn.classList.remove("waiting");
+      playBtn.classList.add("ready");
+      playBtn.innerHTML = "▶ Let's Play!";
+    });
+  });
+
+
+  /* ================= STAGE 1 — KEY WORDS =================
+     The book's Key Words box appears. Mia SPEAKS one word at random —
+     "Touch the word: phone!" — and the child touches that word's card.
+     Correct → appreciation + a star. All five words, once each. */
+  var vOrder = [], vi = 0, vLock = false;
+  function startStage1(){
+    splash("Stage 1 · Key Words!", "Mia says a word — can you touch it?", "Stage 1 · Key Words", buildVocab, "img/mia-stage.jpg");
+  }
+  function buildVocab(){
+    showView("vocab");
+    vLock = false;
+    vOrder = shuffle(WORDS.map(function(w){ return w.id; }));
+    vi = 0;
+    vocabGridEl.innerHTML = "";
+    WORDS.forEach(function(w){
+      var a = WORD_ART[w.id];
+      var b = document.createElement("button");
+      b.className = "vocab-item"; b.dataset.word = w.id;
+      b.setAttribute("aria-label", "Key Word: " + cap1(w.word));
+      var media = a.img
+        ? '<img src="' + a.img + '" alt="" draggable="false">'
+        : a.svg;
+      b.innerHTML = media + '<span class="vw">' + w.word + '</span><span class="tick">✓</span>';
+      b.addEventListener("click", function(){ onVocabCard(w.id, b); });
+      vocabGridEl.appendChild(b);
+    });
+    askVocab();
+  }
+  function askVocab(){
+    pointMia();
+    say("Touch the word: " + vOrder[vi] + "!", "instruct");
+  }
+  function onVocabCard(id, btn){
+    if(vLock || btn.classList.contains("right")) return;
+    audio();
+    if(id === vOrder[vi]){
+      vLock = true;
+      btn.classList.add("right");
+      /* appreciation + the word WITH the book's own meaning — recall and use */
+      var w = null;
+      WORDS.forEach(function(x){ if(x.id === id) w = x; });
+      award();
+      var p = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+      praise(p);
+      mascotReact("cheer");
+      chimeRight(); buzz();
+      burstIn(btn, 50, 40, 6);
+      if(w){
+        var sentence = cap1(w.word) + "! " + cap1(w.def) + ".";
+        speechEl.textContent = sentence;
+        lastPrompt = sentence;
+        speak(p + " " + sentence, "praise");
+      }
+      afterMia(function(){
+        clearPraise();
+        vi++;
+        vLock = false;
+        if(vi >= vOrder.length){ startMatch(); } else { askVocab(); }
+      }, 1700);
+    } else {
+      btn.classList.remove("wrong"); void btn.offsetWidth; btn.classList.add("wrong");
+      onWrong();
+      speak("Try again!", "retry");
+      speechEl.textContent = "Try again! You can do it!";
+      var vv = vi;
+      setTimeout(function(){
+        if(!vLock && vi === vv && !vocabView.hidden){ askVocab(); }
+      }, 1200);
+    }
+  }
+
+  /* ============ TALKING QUESTIONS — one engine, two of the book's
+     printed question sets: "Choose the Answer" (Activities) and "Mia
+     Asks" (the Check MCQs). Mia SPEAKS the question like a talking quiz
+     and the child taps an answer. Correct → appreciation + a star.
+     Wrong → kind try-again, no score loss, no fail. Wrong picks are
+     remembered so a star is earned once, on the right pick. */
+  var TINTS = ["#FFF3D6","#FDE8F0","#E4F6E0","#E8F1FD","#F3E8FD","#E0F7F4"];
+  function makeQuiz(bank, optsEl, labelFor, nextFn){
+    return {bank:bank, optsEl:optsEl, label:labelFor, nextFn:nextFn,
+            idx:0, waitAnswer:false, phase:"idle", heardQ:[]};
+  }
+  var miaQuiz = makeQuiz(MCQS, optsEl,
+    function(){ return "Stage 7 · Mia Asks"; }, showEnd);
+  function startMiaAsks(){
+    miaQuiz.idx = 0;
+    splash("Stage 7 · Mia Asks!", "Last game! Mia asks — tap the right answer!", "Stage 7 · Mia Asks", function(){ showQuizQ(miaQuiz); }, "img/mia-stage.jpg");
+  }
+
+  function showQuizQ(quiz){
+    quiz = quiz || miaQuiz;
+    clearPraise();
+    if(quiz.idx >= quiz.bank.length){ quiz.nextFn(); return; }
+    var q = quiz.bank[quiz.idx];
+    partLineEl.textContent = quiz.label(quiz.idx);
+    showView("quiz");
+    splashView.hidden = true;
+    quiz.optsEl.innerHTML = "";
+    q.opts.forEach(function(o, k){
+      var b = document.createElement("button");
+      b.className = "opt";
+      b.dataset.tint = "abc"[k % 3];
+      b.setAttribute("aria-label", o.word);
+      var media = "";
+      if(o.img){ media = '<span class="opt-img"><img src="' + o.img + '" alt="" draggable="false"></span>'; }
+      else if(o.svg){ media = '<span class="opt-img">' + o.svg + '</span>'; }
+      b.innerHTML = media + '<span class="opt-word">' + o.word + '</span>';
+      b.addEventListener("click", function(){ onQuizAnswer(quiz, o, q, b); });
+      quiz.optsEl.appendChild(b);
+    });
+    quiz.waitAnswer = true;
+    say(q.q, "question");
+  }
+  function onQuizAnswer(quiz, o, q, btn){
+    if(!quiz.waitAnswer || quiz.idx >= quiz.bank.length) return;
+    audio();
+    if(o.id === q.ans){
+      quiz.waitAnswer = false;
+      btn.classList.add("right");
+      burstIn(btn, 50, 40, 6);
+      award();
+      var p = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+      praise(p);
+      mascotReact("cheer");
+      chimeRight(); buzz();
+      speak(p + (q.why ? " " + q.why : ""), "praise");
+      quiz.idx++;
+      afterMia(function(){ showQuizQ(quiz); }, 2300);
+    } else {
+      btn.classList.add("wrong");
+      praise("Try again! 🙂");
+      mascotReact("encourage");
+      chimeWrong();
+      say("Good try! " + q.q, "retry");
+      setTimeout(function(){ btn.classList.remove("wrong"); }, 500);
+    }
+  }
+
+  /* ================= STAGE 3 — THE ROTATING SLOT =================
+     Most chapters play Match the Column here; the Fill in the Blanks
+     chapters play Fill instead (the book's own rotating slot). */
+  function startSlot(){
+    if(SLOT === "fill"){ startFill(); } else { startCol(); }
+  }
+
+  /* ================= STAGE 3a — MATCH THE COLUMN =================
+     The book's printed Match the Column, made interactive: tap a word
+     card, then tap its meaning. Every match is appreciated and Mia says
+     the pair in the book's own words. Wrong -> kind try-again. */
+  var colMatched = 0, colSel = null, colLock = false;
+  function startCol(){
+    colMatched = 0; colSel = null; colLock = false;
+    splash("Stage 3 · Match the Column!", "Noor is playing too! Tap a word, then tap its meaning!", "Stage 3 · Match the Column", buildCol, "img/mia-stage.jpg");
+  }
+  function buildCol(){
+    showView("col");
+    pointMia();
+    say("Tap a word, then tap its meaning!", "instruct");
+    colTilesEl.innerHTML = "";
+    shuffle(MATCHCOL_PAIRS.slice()).forEach(function(p){
+      var t = document.createElement("div");
+      t.className = "tile"; t.dataset.word = p.id;
+      t.setAttribute("role", "button");
+      t.setAttribute("aria-label", "Meaning: " + p.def + " — find its word");
+      t.innerHTML = '<div class="col-word" hidden>' + p.word + '</div><div class="col-def">' + p.def + '</div><div class="tick">✓</div>';
+      t.addEventListener("click", function(){ onColTile(p, t); });
+      colTilesEl.appendChild(t);
+    });
+    colTrayEl.innerHTML = "";
+    shuffle(MATCHCOL_PAIRS.slice()).forEach(function(p){
+      var card = document.createElement("div");
+      card.className = "drag-card col-card"; card.dataset.word = p.id;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", "Word card: " + p.word + ". Tap it, then tap its meaning.");
+      card.innerHTML = "<span>" + p.word + "</span>";
+      card.addEventListener("click", function(){ onColCard(p, card); });
+      colTrayEl.appendChild(card);
+    });
+  }
+  function selectColCard(card){
+    if(colSel){ colSel.classList.remove("selected"); }
+    colSel = card;
+    if(card){ card.classList.add("selected"); }
+  }
+  function onColCard(p, card){
+    if(colLock || card.classList.contains("gone")) return;
+    audio(); popSound();
+    if(colSel === card){ selectColCard(null); } else { selectColCard(card); }
+  }
+  function onColTile(p, tile){
+    if(colLock || tile.classList.contains("matched") || !colSel) return;
+    audio();
+    if(colSel.dataset.word === p.id){
+      colLock = true;
+      var w = tile.querySelector(".col-word"); if(w){ w.hidden = false; }
+      tile.classList.add("matched");
+      colSel.classList.add("gone");
+      selectColCard(null);
+      award();
+      colMatched++;
+      var pr = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+      praise(pr);
+      mascotReact("cheer");
+      chimeRight(); buzz();
+      var sentence = p.word + "! " + cap1(p.def) + ".";
+      speechEl.textContent = sentence;
+      lastPrompt = sentence;
+      speak(pr + " " + sentence, "praise");
+      if(colMatched >= MATCHCOL_PAIRS.length){
+        afterMia(startChart, 1800);
+      } else {
+        afterMia(function(){ colLock = false; clearPraise(); say("Find the next pair!", "instruct"); }, 1200);
+      }
+    } else {
+      tile.classList.remove("wrong"); void tile.offsetWidth; tile.classList.add("wrong");
+      praise("Try again! 🙂");
+      mascotReact("encourage");
+      chimeWrong();
+      speechEl.textContent = "That meaning goes with another word. Try again!";
+      lastPrompt = speechEl.textContent;
+      speak("Try again!", "retry");
+    }
+  }
+
+  /* ================= STAGE 4 — MY CHART =================
+     The book's own chart activity: Mia reads the chart with the child;
+     each printed line is tapped to tick it off, one by one, until the
+     chart is complete. Every tick is appreciated. */
+  var chartDone = 0, chartLock = false;
+  function startChart(){
+    chartDone = 0; chartLock = false;
+    splash("Stage 4 · " + CHART_TITLE + "!", "Max is playing too! Read each line with Mia and tap it to tick it!", "Stage 4 · My Chart", buildChart, "img/mia-stage.jpg");
+  }
+  function buildChart(){
+    showView("chart");
+    chartTitleEl.textContent = CHART_TITLE;
+    chartHeadEl.textContent = CHART_HEAD;
+    chartRowsEl.innerHTML = "";
+    CHART_ROWS.forEach(function(r){
+      var b = document.createElement("button");
+      b.className = "chart-row";
+      b.innerHTML = '<span class="box"></span><span>' + r + '</span>';
+      b.addEventListener("click", function(){ onChartRow(r, b); });
+      chartRowsEl.appendChild(b);
+    });
+    pointMia();
+    say(CHART_TITLE + "! Tap each line when it is done!", "instruct");
+  }
+  function onChartRow(r, btn){
+    if(chartLock || btn.classList.contains("done")) return;
+    audio();
+    chartLock = true;
+    btn.classList.add("done");
+    btn.querySelector(".box").textContent = "✓";
+    award();
+    chartDone++;
+    var pr = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    praise(pr);
+    mascotReact("cheer");
+    chimeRight(); buzz();
+    burstIn(btn, 50, 40, 6);
+    var sentence = r + " — done!";
+    speechEl.textContent = sentence;
+    lastPrompt = sentence;
+    speak(pr + " " + sentence, "praise");
+    if(chartDone >= CHART_ROWS.length){
+      afterMia(startWrite, 1800);
+    } else {
+      afterMia(function(){ chartLock = false; clearPraise(); }, 1100);
+    }
+  }
+
+  /* ================= STAGE 5 — THINK AND WRITE =================
+     The book's own writing activity: Mia reads the printed prompt
+     aloud; the child writes the answer (on paper or in a notebook),
+     then taps the button. Thinking and writing earn the star — there
+     is no wrong answer. */
+  var writeDone = false;
+  function startWrite(){
+    writeDone = false;
+    splash("Stage 5 · " + WRITE_TITLE + "!", "Zoe is playing too! Listen to Mia, then write your answer!", "Stage 5 · Think and Write", buildWrite, "img/mia-stage.jpg");
+  }
+  function buildWrite(){
+    showView("write");
+    writeTitleEl.textContent = WRITE_TITLE;
+    writePromptEl.textContent = WRITE_PROMPT;
+    writeBtnEl.disabled = false;
+    pointMia();
+    say(WRITE_PROMPT, "question");
+  }
+  function onWriteDone(){
+    if(writeDone) return;
+    audio();
+    writeDone = true;
+    writeBtnEl.disabled = true;
+    award();
+    var pr = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    praise(pr);
+    mascotReact("cheer");
+    chimeRight(); buzz();
+    speechEl.textContent = "You thought and wrote like a scientist!";
+    lastPrompt = speechEl.textContent;
+    speak(pr + " You thought and wrote like a scientist!", "praise");
+    afterMia(startPredict, 1800);
+  }
+  writeBtnEl.addEventListener("click", onWriteDone);
+
+  /* ================= STAGE 6 — PREDICT! =================
+     The book's printed investigation prediction: Mia reads it aloud;
+     the child says or draws a prediction, then taps the button. Every
+     prediction is praised (the book's own rule) — no wrong answer. */
+  var predictDone = false;
+  function startPredict(){
+    predictDone = false;
+    splash("Stage 6 · Predict!", "Ruby is playing too! Think like a scientist — what do you predict?", "Stage 6 · Predict!", buildPredict, "img/mia-stage.jpg");
+  }
+  function buildPredict(){
+    showView("predict");
+    predictTextEl.textContent = PREDICT_TEXT;
+    predictBtnEl.disabled = false;
+    pointMia();
+    say(PREDICT_TEXT, "question");
+  }
+  function onPredictDone(){
+    if(predictDone) return;
+    audio();
+    predictDone = true;
+    predictBtnEl.disabled = true;
+    award();
+    var pr = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    praise(pr);
+    mascotReact("cheer");
+    chimeRight(); buzz();
+    speechEl.textContent = "Great predicting, scientist!";
+    lastPrompt = speechEl.textContent;
+    speak(pr + " Great predicting, scientist!", "praise");
+    afterMia(startMiaAsks, 1800);
+  }
+  predictBtnEl.addEventListener("click", onPredictDone);
+
+  /* ================= STAGE 5 — FILL IN THE BLANKS =================
+     The book's own activity, spoken: Mia reads each printed sentence
+     with a missing word ("Technology is made by... which word fits?")
+     and the child taps the right word from three tiles — the tiles come
+     from the book's own printed wordbanks. Correct → the blank fills in
+     and Mia reads the whole sentence aloud, as the book prints it. */
+  var filli = 0, fillLock = false;
+  function startFill(){
+    filli = 0;
+    splash("Stage 3 · Fill in the Blanks!", "Zoe is playing too! Mia reads a sentence. Tap the missing word!", "Stage 3 · Fill in the Blanks", showFill, "img/mia-stage.jpg");
+  }
+  function showFill(){
+    clearPraise();
+    if(filli >= FILL_ITEMS.length){ startChart(); return; }
+    var it = FILL_ITEMS[filli];
+    partLineEl.textContent = "Stage 6 · Fill in the Blanks";
+    showView("fill");
+    fillSentenceEl.innerHTML = "";
+    fillSentenceEl.appendChild(document.createTextNode(it.pre + " "));
+    var blank = document.createElement("span");
+    blank.className = "blank";
+    blank.id = "fillBlank";
+    blank.textContent = "______";
+    fillSentenceEl.appendChild(blank);
+    fillSentenceEl.appendChild(document.createTextNode(" " + it.post));
+    fillTilesEl.innerHTML = "";
+    it.tiles.forEach(function(w){
+      var b = document.createElement("button");
+      b.className = "fill-tile";
+      b.textContent = w;
+      b.addEventListener("click", function(){ onFillAnswer(w, b); });
+      fillTilesEl.appendChild(b);
+    });
+    fillLock = false;
+    say(it.say, "question");
+  }
+  function onFillAnswer(word, btn){
+    if(fillLock) return;
+    var it = FILL_ITEMS[filli];
+    if(filli >= FILL_ITEMS.length) return;
+    audio();
+    if(word === it.ans){
+      fillLock = true;
+      btn.classList.add("right");
+      var blank = document.getElementById("fillBlank");
+      if(blank){ blank.textContent = word; blank.classList.add("filled"); }
+      award();
+      var p = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+      praise(p);
+      mascotReact("cheer");
+      chimeRight(); buzz();
+      say(p + " " + it.full, "praise");
+      filli++;
+      afterMia(showFill, 2600);
+    } else {
+      btn.classList.add("wrong");
+      praise("Try again! 🙂");
+      mascotReact("encourage");
+      chimeWrong();
+      say("Try again! " + it.say, "retry");
+      setTimeout(function(){ btn.classList.remove("wrong"); }, 500);
+    }
+  }
+
+  /* ================= generic drag/tap engine (musical-chairs pattern) =================
+     One pointer-drag implementation for the Stage 4a picture cards.
+     Tap-tap fallback: tap a card to select it, tap a target to drop. */
+  function makeDraggable(el, opts){
+    var pos = null, startX = 0, startY = 0, curX = 0, curY = 0, dragged = false;
+    function moveTo(x, y){
+      el.style.transform = "translate(" + x + "px," + y + "px) scale(1.07)";
+    }
+    function settle(){
+      el.classList.add("spring");
+      el.style.transform = "";
+      var done = el;
+      setTimeout(function(){ done.classList.remove("spring"); }, 520);
+    }
+    function center(){
+      var r = el.getBoundingClientRect();
+      return {x: r.left + r.width/2, y: r.top + r.height/2};
+    }
+    function down(e){
+      if(el.classList.contains("gone")) return;
+      audio();
+      if(e.pointerType === "mouse" && e.button !== 0) return;
+      pos = {x: e.clientX, y: e.clientY};
+      startX = e.clientX; startY = e.clientY; curX = 0; curY = 0; dragged = false;
+      el.classList.add("dragging");
+      try{ el.setPointerCapture(e.pointerId); }catch(err){}
+      e.preventDefault();
+    }
+    function move(e){
+      if(!pos) return;
+      curX = e.clientX - startX; curY = e.clientY - startY;
+      if(Math.abs(curX) + Math.abs(curY) > 6){ dragged = true; }
+      if(dragged){ moveTo(curX, curY); }
+      e.preventDefault();
+    }
+    function up(e){
+      if(!pos) return;
+      el.classList.remove("dragging");
+      var wasDrag = dragged;
+      pos = null; dragged = false;
+      if(wasDrag){
+        var c = center();
+        var hit = null;
+        for(var i=0;i<opts.venues.length;i++){
+          var v = opts.venues[i];
+          if(v.disabled && v.disabled()) continue;
+          var r = v.el.getBoundingClientRect();
+          if(c.x >= r.left - 14 && c.x <= r.right + 14 && c.y >= r.top - 14 && c.y <= r.bottom + 14){ hit = v; break; }
+        }
+        el.style.transform = "";
+        if(hit){
+          if(opts.tryDrop(hit)){ return; }
+          opts.onFail && opts.onFail(hit);
+        }
+        settle();
+      } else {
+        el.style.transform = "";
+        opts.onTap && opts.onTap();
+      }
+    }
+    el.addEventListener("pointerdown", down);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", function(){ pos = null; el.classList.remove("dragging"); el.style.transform = ""; });
+  }
+  var selectedCard = null;
+  function selectCard(el){
+    if(selectedCard){ selectedCard.classList.remove("selected"); }
+    selectedCard = el;
+    if(el){ el.classList.add("selected"); }
+  }
+
+  /* ================= STAGE 4 — MATCH IT =================
+     The book's printed Match activities, made interactive: the four
+     Activities pairs plus the Check page's two (bicycle, clock). Drag
+     each picture to the job it does. Every match is appreciated, and
+     Mia says the pair in the book's own words. */
+  var matched = 0;
+  function startMatch(){
+    splash("Stage 2 · Match It!", "Sam is playing too! Match each picture to its pair!", "Stage 2 · Match It", buildMatch, "img/mia-stage.jpg");
+  }
+  function buildMatch(){
+    matched = 0;
+    showView("match");
+    selectCard(null);
+    pointMia();
+    say("Drag each picture to its pair!", "instruct");
+    tilesEl.innerHTML = "";
+    MATCH_PAIRS.forEach(function(p){
+      var t = document.createElement("div");
+      t.className = "tile"; t.dataset.word = p.id;
+      t.setAttribute("role", "button");
+      t.setAttribute("aria-label", "Match: " + p.job + " — find its picture");
+      t.innerHTML = '<div class="word">' + p.job + '</div><div class="tick">✓</div>';
+      tilesEl.appendChild(t);
+    });
+    trayEl.innerHTML = "";
+    shuffle(MATCH_PAIRS.slice()).forEach(function(p){
+      var card = document.createElement("div");
+      card.className = "drag-card"; card.dataset.word = p.id; card.dataset.part = "match";
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", "Picture card: " + p.alt + ". Drag it to its job, or tap it, then tap the job.");
+      card.innerHTML = '<img src="' + p.img + '" alt="' + p.alt + '" draggable="false"><div class="dc-word">' + p.word + '</div>';
+      trayEl.appendChild(card);
+      attachMatchDrag(card);
+    });
+  }
+  function attachMatchDrag(card){
+    var venues = [];
+    tilesEl.querySelectorAll(".tile").forEach(function(t){
+      venues.push({
+        el: t, word: t.dataset.word,
+        disabled: function(){ return t.classList.contains("matched"); }
+      });
+      if(!t.dataset.tapBound){
+        t.dataset.tapBound = "1";
+        t.addEventListener("click", function(){
+          if(selectedCard && !selectedCard.classList.contains("gone") && selectedCard.dataset.part === "match"){
+            tryMatchDrop(selectedCard, t);
+          }
+        });
+      }
+    });
+    makeDraggable(card, {
+      venues: venues,
+      tryDrop: function(v){
+        return tryMatchDrop(card, v.el);
+      },
+      onFail: function(){},
+      onTap: function(){
+        popSound();
+        if(selectedCard === card){ selectCard(null); } else { selectCard(card); }
+      }
+    });
+  }
+  function tryMatchDrop(card, tile){
+    if(tile.classList.contains("matched") || card.classList.contains("gone")) return false;
+    if(card.dataset.word === tile.dataset.word){
+      var pair = null;
+      MATCH_PAIRS.forEach(function(x){ if(x.id === tile.dataset.word) pair = x; });
+      tile.insertAdjacentHTML("afterbegin", '<img class="thumb" src="' + pair.img + '" alt="" draggable="false">');
+      var cardRect = card.getBoundingClientRect(), tileRect = tile.getBoundingClientRect();
+      card.style.transform = "translate(" + (tileRect.left + tileRect.width/2 - (cardRect.left + cardRect.width/2)) + "px," +
+                             (tileRect.top + tileRect.height/2 - (cardRect.top + cardRect.height/2)) + "px) scale(.25)";
+      card.classList.add("gone");
+      tile.classList.add("matched");
+      if(selectedCard === card){ selectCard(null); }
+      award();
+      matched++;
+      var p = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+      praise(p);
+      mascotReact("cheer");
+      chimeRight(); buzz();
+      var sentence = pair.word + "! " + pair.line;
+      speechEl.textContent = sentence;
+      lastPrompt = sentence;
+      speak(p + " " + sentence, "praise");
+      if(matched >= MATCH_PAIRS.length){
+        afterMia(startSlot, 1800);
+      } else {
+        afterMia(function(){ clearPraise(); say("Find the next picture!", "instruct"); }, 1200);
+      }
+      return true;
+    }
+    card.classList.remove("wrong"); void card.offsetWidth; card.classList.add("wrong");
+    tile.classList.remove("wrong"); void tile.offsetWidth; tile.classList.add("wrong");
+    tile.classList.add("hot");
+    setTimeout(function(){ tile.classList.remove("hot"); }, 450);
+    praise("Try again! 🙂");
+    mascotReact("encourage");
+    chimeWrong();
+    speechEl.textContent = "That picture goes somewhere else. Try again!";
+    lastPrompt = speechEl.textContent;
+    speak("Try again!", "retry");
+    return false;
+  }
+
+  /* ================= ending + celebration ================= */
+  function showEnd(){
+    clearPraise();
+    partLineEl.textContent = "All done! 🎉";
+    showView("none");
+    dockEl.style.display = "none";
+    document.getElementById("finalText").textContent = "Your Score: " + score + " ⭐";
+    document.getElementById("jarCount").textContent = score;
+    document.getElementById("endOverlay").hidden = false;
+    requestAnimationFrame(function(){
+      document.getElementById("jarFill").style.height = Math.round(score / MAX_SCORE * 100) + "%";
+    });
+    chimeWin();
+    speak("Well done, little scientist! " + OUTCOME + " Your score is " + score + "!", "praise");
+    starRain();
+  }
+  function starRain(){
+    var colours = ["#FFC93C","#7ED957","#0E7C86","#5BB8E8","#C39BD3"];
+    var i, el;
+    for(i=0;i<26;i++){
+      el = document.createElement("div");
+      el.className = "fall-star"; el.innerHTML = STAR;
+      var sz = 20 + Math.random()*22;
+      el.style.width = sz+"px"; el.style.height = sz+"px";
+      el.style.left = (Math.random()*96) + "vw";
+      el.style.animationDuration = (2.2 + Math.random()*2.2) + "s";
+      el.style.animationDelay = (Math.random()*1.1) + "s";
+      document.body.appendChild(el);
+      (function(e2){ setTimeout(function(){ e2.remove(); }, 6000); })(el);
+    }
+    for(i=0;i<30;i++){
+      el = document.createElement("div");
+      el.className = "confetti";
+      el.style.width = (7 + Math.random()*6) + "px";
+      el.style.height = (10 + Math.random()*9) + "px";
+      el.style.left = (Math.random()*98) + "vw";
+      el.style.background = colours[i % colours.length];
+      el.style.animationDuration = (2.4 + Math.random()*2.4) + "s";
+      el.style.animationDelay = (Math.random()*1.2) + "s";
+      document.body.appendChild(el);
+      (function(e2){ setTimeout(function(){ e2.remove(); }, 6500); })(el);
+    }
+  }
+
+  /* ================= start: the game opens with Mia's hello ================= */
+  function resetGame(){
+    stopSpeak();
+    introDone = false; introTalking = false; introArmed = false;
+    score = 0; updateScore(false);
+    matched = 0; filli = 0; colMatched = 0; chartDone = 0; writeDone = false; predictDone = false;
+    dockEl.style.display = "";
+    document.getElementById("endOverlay").hidden = true;
+    document.getElementById("jarFill").style.height = "0%";
+    playBtn.disabled = false;
+    playBtn.classList.remove("listening", "waiting", "ready");
+    playBtn.innerHTML = "▶ Let's Play!";
+    clearPraise();
+    partLineEl.textContent = "Part 3 · The Matter Lab";
+    showView("intro");
+    waveMia();
+    say("Hello! I am Mia!", "instruct");
+  }
+  document.getElementById("againBtn").addEventListener("click", function(){
+    audio();
+    resetGame();
+  });
+  updateScore(false);
+  showView("intro");
+  waveMia();
+  say("Hello! I am Mia!", "instruct");
+})();
+</script>
+</body>
+</html>
