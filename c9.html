@@ -460,6 +460,18 @@
   @keyframes fall{to{transform:translateY(108dvh) rotate(320deg);}}
   .confetti{position:fixed; top:-22px; z-index:30; pointer-events:none; border-radius:2px; animation:confall linear forwards;}
   @keyframes confall{to{transform:translateY(108dvh) rotate(560deg);}}
+  /* ---------- VIRTUAL LAB (PhET embed) ---------- */
+  .vlab-card{
+    width:calc(100% - 24px); max-width:536px; margin:14px auto 10px; background:#fff;
+    border:4px solid var(--teal); border-radius:24px; padding:18px 14px 16px;
+    box-shadow:var(--card-shadow); text-align:center;
+  }
+  .vlab-title{font-size:clamp(21px,5.6vw,25px); font-weight:800; color:var(--deep); line-height:1.25;}
+  .vlab-line{font-size:16.5px; font-weight:700; color:var(--ink); line-height:1.4; margin:8px 2px 12px;}
+  .vlab-frame{display:block; background:var(--tint);}
+  .vlab-credit{font-size:12px; font-weight:700; color:#6E97A0; line-height:1.45; margin-top:10px;}
+  .vlab-link{margin-top:6px;}
+  .vlab-link a{color:var(--deep); font-weight:800; font-size:15px;}
   .credit{font-size:12.5px; font-weight:700; color:#6E97A0; padding:0 10px 16px; text-align:center; margin-top:auto;}
   @media (max-width:400px){
     .story-mia{width:76px;}
@@ -633,6 +645,15 @@
     <div class="match-tiles" id="matchTiles"></div>
     <div class="tray" id="tray"></div>
   </div>
+
+  <!-- Virtual Lab: PhET simulation, free for educational use -->
+  <section class="vlab-card" aria-label="Virtual Lab">
+    <h2 class="vlab-title">🔬 Virtual Lab — Try It Yourself!</h2>
+    <p class="vlab-line">Build bigger circuits — add more bulbs and batteries and light them up!</p>
+    <iframe class="vlab-frame" src="https://phet.colorado.edu/sims/html/circuit-construction-kit-dc-virtual-lab/latest/circuit-construction-kit-dc-virtual-lab_en.html" title="PhET Circuit Construction Kit: DC Virtual Lab — build bigger circuits and light them up" style="width:100%; height:600px; border:none; border-radius:16px;" allowfullscreen></iframe>
+    <p class="vlab-credit">Simulation by PhET Interactive Simulations, University of Colorado Boulder — phet.colorado.edu (free for educational use)</p>
+    <p class="vlab-link"><a href="https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc-virtual-lab" target="_blank" rel="noopener">Open the simulation in a new tab</a></p>
+  </section>
 
   <div class="credit">✦ Prepared by: Zulfiqar Ali Sajid ✦</div>
 
